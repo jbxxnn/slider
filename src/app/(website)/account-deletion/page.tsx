@@ -13,10 +13,10 @@ const AccountDeletion = () => (
       <ol className="list-decimal list-inside ml-4 space-y-2">
         <li>Log into your SlideAi account</li>
         <li>Go to your Account Settings</li>
-        <li>Scroll down to the "Delete Account" section</li>
-        <li>Click on "Delete My Account"</li>
-        <li>Confirm your decision by typing "DELETE" in the confirmation field</li>
-        <li>Click "Permanently Delete Account"</li>
+        <li>Scroll down to the &quot;Delete Account&quot; section</li>
+        <li>Click on &quot;Delete My Account&quot;</li>
+        <li>Confirm your decision by typing &quot;DELETE&quot; in the confirmation field</li>
+        <li>Click &quot;Permanently Delete Account&quot;</li>
       </ol>
     </section>
 
@@ -49,7 +49,7 @@ const AccountDeletion = () => (
     <section className="mb-8">
       <h2 className="text-xl font-semibold mb-2">Need Help?</h2>
       <p className="mb-4">
-        If you're having trouble deleting your account or have questions about the process, our support team is here to help.
+        If you&apos;re having trouble deleting your account or have questions about the process, our support team is here to help.
       </p>
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
         <p className="text-blue-800">
@@ -66,7 +66,7 @@ const AccountDeletion = () => (
       <ul className="list-disc list-inside ml-4 space-y-2">
         <li><strong>Pause your account:</strong> Temporarily disable your account instead of deleting it</li>
         <li><strong>Export your data:</strong> Download your data before deletion</li>
-        <li><strong>Contact support:</strong> We may be able to help resolve any issues you're experiencing</li>
+        <li><strong>Contact support:</strong> We may be able to help resolve any issues you&apos;re experiencing</li>
       </ul>
     </section>
 
