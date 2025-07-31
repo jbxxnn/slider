@@ -62,10 +62,9 @@ export const sendPrivateMessage = async (
 
 
 export const generateTokens = async (code: string) => {
-  console.log('🔵 Starting token generation with code:', code ? 'Code exists' : 'No code')
-  
   const insta_form = new FormData()
   insta_form.append('client_id', process.env.INSTAGRAM_CLIENT_ID as string)
+
   insta_form.append(
     'client_secret',
     process.env.INSTAGRAM_CLIENT_SECRET as string
@@ -77,47 +76,18 @@ export const generateTokens = async (code: string) => {
   )
   insta_form.append('code', code)
 
-  console.log('🔵 Making token request to Instagram...')
   const shortTokenRes = await fetch(process.env.INSTAGRAM_TOKEN_URL as string, {
     method: 'POST',
     body: insta_form,
   })
 
-  console.log('🔵 Token response status:', shortTokenRes.status)
   const token = await shortTokenRes.json()
-  console.log('🔵 Token response:', {
-    tokenExists: !!token,
-    tokenKeys: token ? Object.keys(token) : 'N/A',
-    hasPermissions: !!token?.permissions,
-    permissionsType: typeof token?.permissions,
-    permissionsLength: token?.permissions?.length
-  })
-
-  // Add null check for token and permissions
-  if (!token) {
-    console.log('🔴 Token response is null/undefined')
-    return null
-  }
-
-  if (!token.permissions) {
-    console.log('🔴 Token has no permissions property')
-    return null
-  }
-
   if (token.permissions.length > 0) {
-    console.log('🔵 Got permissions, exchanging for long-lived token...')
+    console.log(token, 'got permissions')
     const long_token = await axios.get(
       `${process.env.INSTAGRAM_BASE_URL}/access_token?grant_type=ig_exchange_token&client_secret=${process.env.INSTAGRAM_CLIENT_SECRET}&access_token=${token.access_token}`
     )
-    console.log('🔵 Long-lived token response:', {
-      status: long_token.status,
-      hasData: !!long_token.data,
-      dataKeys: long_token.data ? Object.keys(long_token.data) : 'N/A'
-    })
 
     return long_token.data
-  } else {
-    console.log('🔴 No permissions in token response')
-    return null
   }
 }
