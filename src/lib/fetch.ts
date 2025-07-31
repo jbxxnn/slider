@@ -82,7 +82,15 @@ export const generateTokens = async (code: string) => {
   })
 
   const token = await shortTokenRes.json()
-  if (token.permissions.length > 0) {
+  
+  // Check if the response contains an error
+  if (token.error_type || token.error_message) {
+    console.log('🔴 Instagram API error:', token)
+    return null
+  }
+  
+  // Check if permissions exist before accessing length
+  if (token.permissions && token.permissions.length > 0) {
     console.log(token, 'got permissions')
     const long_token = await axios.get(
       `${process.env.INSTAGRAM_BASE_URL}/access_token?grant_type=ig_exchange_token&client_secret=${process.env.INSTAGRAM_CLIENT_SECRET}&access_token=${token.access_token}`
@@ -90,4 +98,7 @@ export const generateTokens = async (code: string) => {
 
     return long_token.data
   }
+  
+  console.log('🔴 No permissions found in token response:', token)
+  return null
 }

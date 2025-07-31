@@ -20,7 +20,7 @@ export const onIntegrate = async (code: string) => {
 
     if (integration && integration.integrations.length === 0) {
       const token = await generateTokens(code)
-      console.log(token)
+      console.log('🔵 Token generation result:', { tokenExists: !!token, tokenType: typeof token, tokenKeys: token ? Object.keys(token) : 'N/A' })
 
       if (token) {
         const insta_id = await axios.get(
@@ -37,13 +37,13 @@ export const onIntegrate = async (code: string) => {
         )
         return { status: 200, data: create }
       }
-      console.log('🔴 401')
-      return { status: 401 }
+      console.log('🔴 Token generation failed')
+      return { status: 401, hasData: false, error: 'Token generation failed' }
     }
-    console.log('🔴 404')
-    return { status: 404 }
+    console.log('🔴 User already has integrations')
+    return { status: 404, hasData: false, error: 'User already has integrations' }
   } catch (error) {
     console.log('🔴 500', error)
-    return { status: 500 }
+    return { status: 500, hasData: false, error: error instanceof Error ? error.message : 'Unknown error' }
   }
 }
