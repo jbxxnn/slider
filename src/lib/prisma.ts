@@ -13,16 +13,6 @@ export const client =
         url: process.env.DATABASE_URL,
       },
     },
-    // Connection pooling configuration for serverless
-    __internal: {
-      engine: {
-        connectionLimit: 1,
-        pool: {
-          min: 0,
-          max: 1,
-        },
-      },
-    },
   })
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = client
