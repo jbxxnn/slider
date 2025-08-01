@@ -18,7 +18,7 @@ export const onIntegrate = async (code: string) => {
   try {
     console.log('🔍 Getting current user...')
     const user = await onCurrentUser()
-    console.log('🔍 Current user:', user ? { id: user.id, name: user.firstname } : 'null')
+    console.log('🔍 Current user:', user ? { id: user.id, name: user.firstName } : 'null')
 
     console.log('🔍 Getting integration for user...')
     const integration = await getIntegration(user.id)
