@@ -2,11 +2,11 @@
 
 import { client } from '@/lib/prisma'
 
-// Helper function to retry database operations
+// Simplified retry operation with fewer retries and shorter delays
 const retryOperation = async <T>(
   operation: () => Promise<T>,
-  maxRetries: number = 3,
-  delay: number = 1000
+  maxRetries: number = 2,
+  delay: number = 500
 ): Promise<T> => {
   for (let i = 0; i < maxRetries; i++) {
     try {
@@ -19,9 +19,9 @@ const retryOperation = async <T>(
         throw error
       }
       
-      // If it's a connection error, wait before retrying
+      // Only retry on specific connection errors
       if (error.message?.includes('prepared statement') || error.message?.includes('connection')) {
-        await new Promise(resolve => setTimeout(resolve, delay * (i + 1)))
+        await new Promise(resolve => setTimeout(resolve, delay))
         continue
       }
       
