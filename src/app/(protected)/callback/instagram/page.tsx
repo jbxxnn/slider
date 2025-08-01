@@ -1,6 +1,7 @@
 import { onIntegrate } from '@/actions/integrations'
 import { redirect } from 'next/navigation'
 import React from 'react'
+import { client } from '@/lib/prisma'
 
 type Props = {
   searchParams: {
@@ -19,6 +20,15 @@ const Page = async ({ searchParams: { code } }: Props) => {
   console.log('🔍 INSTAGRAM_TOKEN_URL:', process.env.INSTAGRAM_TOKEN_URL ? 'Set' : 'Not set')
   console.log('🔍 INSTAGRAM_BASE_URL:', process.env.INSTAGRAM_BASE_URL ? 'Set' : 'Not set')
   console.log('🔍 NEXT_PUBLIC_HOST_URL:', process.env.NEXT_PUBLIC_HOST_URL ? 'Set' : 'Not set')
+  
+  // Database health check
+  try {
+    console.log('🔍 Testing database connection...')
+    await client.$queryRaw`SELECT 1`
+    console.log('🔍 Database connection successful')
+  } catch (error) {
+    console.log('🔴 Database connection failed:', error)
+  }
   
   if (code) {
     console.log('🔍 Processing code:', code)
