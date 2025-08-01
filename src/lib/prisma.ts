@@ -1,28 +1,9 @@
 import { PrismaClient } from '@prisma/client'
 
-// PrismaClient is attached to the `global` object in development to prevent
-// exhausting your database connection limit.
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined
+declare global {
+  var prisma: PrismaClient | undefined
 }
 
-export const client =
-  globalForPrisma.prisma ??
-  new PrismaClient({
-    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-    datasources: {
-      db: {
-        url: process.env.DATABASE_URL,
-      },
-    },
-  })
+export const client = globalThis.prisma || new PrismaClient()
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = client
-
-// In production, we don't want to keep connections alive
-if (process.env.NODE_ENV === 'production') {
-  // Disconnect after each request in production
-  process.on('beforeExit', async () => {
-    await client.$disconnect()
-  })
-}
+if (process.env.NODE_ENV !== 'production') globalThis.prisma = client
