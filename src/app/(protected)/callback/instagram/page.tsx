@@ -42,21 +42,28 @@ const Page = async ({ searchParams: { code } }: Props) => {
       
       if (user.status === 200) {
         console.log('🔍 Integration successful, redirecting to dashboard')
-        return redirect(
-          `/dashboard/${user.data?.firstname}${user.data?.lastname}/integrations`
-        )
+        const redirectUrl = `/dashboard/${user.data?.firstname}${user.data?.lastname}/integrations`
+        console.log('🔍 Redirecting to:', redirectUrl)
+        redirect(redirectUrl)
       } else {
         console.log('🔴 Integration failed with status:', user.status)
-        return redirect('/sign-up')
+        redirect('/sign-up')
       }
-    } catch (error) {
+    } catch (error: any) {
+      // Check if this is a Next.js redirect (which is not an actual error)
+      if (error?.digest?.includes('NEXT_REDIRECT')) {
+        console.log('🔍 Next.js redirect detected, allowing it to proceed')
+        throw error // Re-throw Next.js redirects
+      }
+      
+      // This is an actual error
       console.log('🔴 Error in Instagram callback:', error)
-      return redirect('/sign-up')
+      redirect('/sign-up')
     }
   }
   
   console.log('🔴 No code provided, redirecting to sign-up')
-  return redirect('/sign-up')
+  redirect('/sign-up')
 }
 
 export default Page
