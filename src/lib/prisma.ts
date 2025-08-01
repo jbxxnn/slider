@@ -15,7 +15,10 @@ export const client =
     },
   })
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = client
+// Ensure singleton in all environments
+if (process.env.NODE_ENV !== 'production') {
+  globalForPrisma.prisma = client
+}
 
 // Handle connection errors gracefully
 client.$connect().catch((error) => {
@@ -25,4 +28,16 @@ client.$connect().catch((error) => {
 // Graceful shutdown
 process.on('beforeExit', async () => {
   await client.$disconnect()
+})
+
+// Handle SIGTERM for proper cleanup
+process.on('SIGTERM', async () => {
+  await client.$disconnect()
+  process.exit(0)
+})
+
+// Handle SIGINT for proper cleanup
+process.on('SIGINT', async () => {
+  await client.$disconnect()
+  process.exit(0)
 })
