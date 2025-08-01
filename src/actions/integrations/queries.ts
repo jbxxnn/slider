@@ -7,28 +7,38 @@ export const updateIntegration = async (
   expire: Date,
   id: string
 ) => {
-  return await client.integrations.update({
-    where: { id },
-    data: {
-      token,
-      expiresAt: expire,
-    },
-  })
+  try {
+    return await client.integrations.update({
+      where: { id },
+      data: {
+        token,
+        expiresAt: expire,
+      },
+    })
+  } catch (error) {
+    console.error('🔴 Error updating integration:', error)
+    throw error
+  }
 }
 
 export const getIntegration = async (clerkId: string) => {
-  return await client.user.findUnique({
-    where: {
-      clerkId,
-    },
-    select: {
-      integrations: {
-        where: {
-          name: 'INSTAGRAM',
+  try {
+    return await client.user.findUnique({
+      where: {
+        clerkId,
+      },
+      select: {
+        integrations: {
+          where: {
+            name: 'INSTAGRAM',
+          },
         },
       },
-    },
-  })
+    })
+  } catch (error) {
+    console.error('🔴 Error getting integration:', error)
+    throw error
+  }
 }
 
 export const createIntegration = async (
@@ -37,22 +47,27 @@ export const createIntegration = async (
   expire: Date,
   igId?: string
 ) => {
-  return await client.user.update({
-    where: {
-      clerkId,
-    },
-    data: {
-      integrations: {
-        create: {
-          token,
-          expiresAt: expire,
-          instagramId: igId,
+  try {
+    return await client.user.update({
+      where: {
+        clerkId,
+      },
+      data: {
+        integrations: {
+          create: {
+            token,
+            expiresAt: expire,
+            instagramId: igId,
+          },
         },
       },
-    },
-    select: {
-      firstname: true,
-      lastname: true,
-    },
-  })
+      select: {
+        firstname: true,
+        lastname: true,
+      },
+    })
+  } catch (error) {
+    console.error('🔴 Error creating integration:', error)
+    throw error
+  }
 }
