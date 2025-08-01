@@ -9,10 +9,22 @@ import { updateIntegration } from '../integrations/queries'
 import { stripe } from '@/lib/stripe'
 
 export const onCurrentUser = async () => {
-  const user = await currentUser()
-  if (!user) return redirect('/sign-in')
-
-  return user
+  console.log('🔍 onCurrentUser called')
+  try {
+    const user = await currentUser()
+    console.log('🔍 Clerk currentUser result:', user ? { id: user.id, firstName: user.firstName } : 'null')
+    
+    if (!user) {
+      console.log('🔴 No user found, redirecting to sign-in')
+      return redirect('/sign-in')
+    }
+    
+    console.log('🔍 User authenticated successfully')
+    return user
+  } catch (error) {
+    console.log('🔴 Error in onCurrentUser:', error)
+    throw error
+  }
 }
 
 export const onBoardUser = async () => {
