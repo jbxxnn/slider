@@ -9,7 +9,7 @@ type Props = {
 
 export default async function Page({ searchParams: { code } }: Props) {
   if (!code) {
-    return permanentRedirect('/sign-up') // ✅ return it!
+    return permanentRedirect('/sign-up') // ✅ return it! 
   }
 
   const processedCode = code.split('#_')[0]
