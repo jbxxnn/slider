@@ -14,9 +14,31 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(req: NextRequest) {
   console.log('🔍 Webhook verification request received')
-  const hub = req.nextUrl.searchParams.get('hub.challenge')
-  console.log('🔍 Hub challenge:', hub)
-  return new NextResponse(hub)
+  
+  const hubMode = req.nextUrl.searchParams.get('hub.mode')
+  const hubChallenge = req.nextUrl.searchParams.get('hub.challenge')
+  const hubVerifyToken = req.nextUrl.searchParams.get('hub.verify_token')
+  
+  console.log('🔍 Verification params:', {
+    mode: hubMode,
+    challenge: hubChallenge,
+    verifyToken: hubVerifyToken
+  })
+  
+  // Verify the token matches what you set in Facebook Developer Console
+  const VERIFY_TOKEN = process.env.INSTAGRAM_WEBHOOK_VERIFY_TOKEN || 'your_verify_token_here'
+  
+  if (hubMode === 'subscribe' && hubVerifyToken === VERIFY_TOKEN) {
+    console.log('✅ Webhook verification successful')
+    return new NextResponse(hubChallenge)
+  } else {
+    console.log('❌ Webhook verification failed:', {
+      expectedToken: VERIFY_TOKEN,
+      receivedToken: hubVerifyToken,
+      mode: hubMode
+    })
+    return new NextResponse('Forbidden', { status: 403 })
+  }
 }
 
 export async function POST(req: NextRequest) {
